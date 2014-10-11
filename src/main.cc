@@ -3,6 +3,7 @@
  */
 #include "auxiliary/csyntax_aux.h"
 #include "includer/gl_include.h"
+#include "includer/glm_include.h"
 #include "includer/wx_include.h"
 #include "logging/emitter/DebuggerConsoleLogEmitter.h"
 #include "logging/Logger.h"
@@ -70,18 +71,17 @@ void PreviewCanvas::OnPaint(wxPaintEvent& event) {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-  glEnable(GL_COLOR_MATERIAL);
-
   glViewport(0, 0, GetSize().x, GetSize().y);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
 
-  gluPerspective(45.0f, GetSize().x / GetSize().y, 0.1f, 200.0f);
+  glMatrixMode(GL_PROJECTION);
+  glLoadMatrixf(
+      glm::value_ptr(
+          glm::perspective(glm::radians(45.0f),
+                           static_cast<float>(GetSize().x / GetSize().y), 0.1f,
+                           200.0f)));
   glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  glTranslatef(0.0f, -5.0f, 0.0f);
+  glLoadMatrixf(glm::value_ptr(glm::translate(glm::vec3(0.0f, -5.0f, 0.0f))));
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glColor4f(0.2f, 0.2f, 0.5f, 1.0f);
   glBegin(GL_LINES);
@@ -102,7 +102,7 @@ void PreviewCanvas::OnPaint(wxPaintEvent& event) {
 class MainFrame : public wxFrame {
  public:
   MainFrame::MainFrame(const wxString &title, const wxPoint &pos,
-                         const wxSize &size)
+                       const wxSize &size)
       : wxFrame(NULL, wxID_ANY, title, pos, size) {
   }
   virtual ~MainFrame() {
