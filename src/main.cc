@@ -101,21 +101,42 @@ class MainFrame : public wxFrame {
   MainFrame::MainFrame(const wxString &title, const wxPoint &pos,
                          const wxSize &size)
       : wxFrame(NULL, wxID_ANY, title, pos, size) {
+  }
+  virtual ~MainFrame() {
+  }
+
+  bool Initialize() {
     // Set up menu bar
     wxMenu *file_menu = new wxMenu;
-    file_menu->Append(wxID_EXIT);
+    if (file_menu == nullptr) {
+      return false;
+    }
+    wxMenuItem *menu_item = file_menu->Append(wxID_EXIT);
+    if (menu_item == nullptr) {
+      return false;
+    }
     wxMenuBar *menu_bar = new wxMenuBar;
-    menu_bar->Append(file_menu, "&File");
+    if (menu_bar == nullptr) {
+      return false;
+    }
+    if (!menu_bar->Append(file_menu, "&pFile")) {
+      return false;
+    }
     SetMenuBar(menu_bar);
 
     // Set up status bar
-    CreateStatusBar();
+    wxStatusBar *status_bar = CreateStatusBar();
+    if (status_bar == nullptr) {
+      return false;
+    }
 
     // Set up preview canvas
     int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
-    new PreviewCanvas(this, args);
-  }
-  virtual ~MainFrame() {
+    PreviewCanvas *canvas = new PreviewCanvas(this, args);
+    if (canvas == nullptr) {
+      return false;
+    }
+    return true;
   }
 
  private:
@@ -141,7 +162,15 @@ class App : public wxApp {
 
     MainFrame *frame = new MainFrame("TORCH v0.0.1", wxPoint(50, 50),
                                      wxSize(900, 680));
-    frame->Show(true);
+    if (frame == nullptr) {
+      return false;
+    }
+    if (!frame->Initialize()) {
+      return false;
+    }
+    if (!frame->Show(true)) {
+      return false;
+    }
     return true;
   }
 };
