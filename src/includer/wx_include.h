@@ -12,6 +12,7 @@
 #include <wx/wx.h>
 #endif
 
+#include <wx/aboutdlg.h>
 #include <wx/glcanvas.h>
 
 #pragma warning(pop)

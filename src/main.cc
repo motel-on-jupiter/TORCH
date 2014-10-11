@@ -120,6 +120,16 @@ class MainFrame : public wxFrame {
       LOGGER.Error("Failed to append exit item to file menu");
       return false;
     }
+    wxMenu *help_menu = new wxMenu;
+    if (help_menu == nullptr) {
+      LOGGER.Error("Failed to allocate for help menu object");
+      return false;
+    }
+    menu_item = help_menu->Append(wxID_ABOUT);
+    if (menu_item == nullptr) {
+      LOGGER.Error("Failed to append exit item to file menu");
+      return false;
+    }
     wxMenuBar *menu_bar = new wxMenuBar;
     if (menu_bar == nullptr) {
       LOGGER.Error("Failed to allocate for menu bar object");
@@ -127,6 +137,10 @@ class MainFrame : public wxFrame {
     }
     if (!menu_bar->Append(file_menu, "&File")) {
       LOGGER.Error("Failed to append file menu to menu bar");
+      return false;
+    }
+    if (!menu_bar->Append(help_menu, "&Help")) {
+      LOGGER.Error("Failed to append help menu to menu bar");
       return false;
     }
     SetMenuBar(menu_bar);
@@ -156,12 +170,21 @@ class MainFrame : public wxFrame {
     UNUSED(event);
     Close(true);
   }
+  void OnAbout(wxCommandEvent& WXUNUSED(event)) {
+    wxAboutDialogInfo info;
+    info.SetName(_("TORCH v0.0.1"));
+    info.SetDescription(_("A particle designer for SPARK engine"));
+    info.SetCopyright(wxT("Copyright (C) 2014 The Motel on Jupiter"));
+    info.AddDeveloper(wxT("Bobo Zeta"));
+    wxAboutBox(info);
+  }
 
   wxDECLARE_EVENT_TABLE();
 };
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
   EVT_MENU(wxID_EXIT, MainFrame::OnExit)
+  EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
 wxEND_EVENT_TABLE()
 
 class App : public wxApp {
