@@ -23,7 +23,6 @@ class PreviewCanvas : public wxGLCanvas {
 
  private:
   wxGLContext *context_;
-  GLfloat vertices_[8][3];
 };
 
 BEGIN_EVENT_TABLE(PreviewCanvas, wxGLCanvas)
@@ -35,12 +34,6 @@ PreviewCanvas::PreviewCanvas(wxFrame *parent, int *args)
     : wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize,
                  wxFULL_REPAINT_ON_RESIZE),
       context_(nullptr) {
-  vertices_[0][0] = vertices_[1][0] = vertices_[2][0] = vertices_[3][0] = -1.0f;
-  vertices_[4][0] = vertices_[5][0] = vertices_[6][0] = vertices_[7][0] = 1.0f;
-  vertices_[0][1] = vertices_[1][1] = vertices_[4][1] = vertices_[5][1] = -1.0f;
-  vertices_[2][1] = vertices_[3][1] = vertices_[6][1] = vertices_[7][1] = 1.0f;
-  vertices_[0][2] = vertices_[3][2] = vertices_[4][2] = vertices_[7][2] = 1.0f;
-  vertices_[1][2] = vertices_[2][2] = vertices_[5][2] = vertices_[6][2] = -1.0f;
 }
 
 PreviewCanvas::~PreviewCanvas() {
@@ -88,22 +81,20 @@ void PreviewCanvas::OnPaint(wxPaintEvent& event) {
   gluPerspective(45.0f, GetSize().x / GetSize().y, 0.1f, 200.0f);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  glTranslatef(0.0f, 0.0f, -5.0f);
-  glRotatef(50.0f, 0.0f, 1.0f, 0.0f);
-
+  glTranslatef(0.0f, -5.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-  static const GLint faces[6][4] = { { 0, 1, 2, 3 }, { 3, 2, 6, 7 }, { 7, 6, 5,
-      4 }, { 4, 5, 1, 0 }, { 5, 6, 2, 1 }, { 7, 4, 0, 3 } };
-  for (int i = 0; i < 6; i++) {
-    glBegin(GL_LINE_STRIP);
-    glVertex3fv(&vertices_[faces[i][0]][0]);
-    glVertex3fv(&vertices_[faces[i][1]][0]);
-    glVertex3fv(&vertices_[faces[i][2]][0]);
-    glVertex3fv(&vertices_[faces[i][3]][0]);
-    glVertex3fv(&vertices_[faces[i][0]][0]);
-    glEnd();
+  glColor4f(0.2f, 0.2f, 0.5f, 1.0f);
+  glBegin(GL_LINES);
+  for (float x = -500.0f; x < 500.0f; x += 1.0f) {
+    glVertex3f(x, 0.0f, -500.0f);
+    glVertex3f(x, 0.0f, 500.0f);
   }
+  for (float z = -500.0f; z < 500.0f; z += 1.0f) {
+    glVertex3f(-500.0f, 0.0f, z);
+    glVertex3f(500.0f, 0.0f, z);
+  }
+  glEnd();
+
   glFlush();
   SwapBuffers();
 }
