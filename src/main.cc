@@ -73,7 +73,7 @@ void PreviewCanvas::OnPaint(wxPaintEvent& event) {
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
   glEnable(GL_COLOR_MATERIAL);
 
-  glViewport(0.0f, 0.0f, GetSize().x, GetSize().y);
+  glViewport(0, 0, GetSize().x, GetSize().y);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 
