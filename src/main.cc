@@ -12,6 +12,8 @@ class PreviewCanvas : public wxGLCanvas {
   PreviewCanvas(wxFrame *parent, int *args);
   virtual ~PreviewCanvas();
 
+  bool Initialize();
+
   void OnResize(wxSizeEvent &evt);
   void OnPaint(wxPaintEvent &evt);
 
@@ -31,20 +33,27 @@ PreviewCanvas::PreviewCanvas(wxFrame *parent, int *args)
     : wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize,
                  wxFULL_REPAINT_ON_RESIZE),
       context_(nullptr) {
-  context_ = new wxGLContext(this);
   vertices_[0][0] = vertices_[1][0] = vertices_[2][0] = vertices_[3][0] = -1.0f;
   vertices_[4][0] = vertices_[5][0] = vertices_[6][0] = vertices_[7][0] = 1.0f;
   vertices_[0][1] = vertices_[1][1] = vertices_[4][1] = vertices_[5][1] = -1.0f;
   vertices_[2][1] = vertices_[3][1] = vertices_[6][1] = vertices_[7][1] = 1.0f;
   vertices_[0][2] = vertices_[3][2] = vertices_[4][2] = vertices_[7][2] = 1.0f;
   vertices_[1][2] = vertices_[2][2] = vertices_[5][2] = vertices_[6][2] = -1.0f;
-
-  // To avoid flashing on MSW
-  SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 }
 
 PreviewCanvas::~PreviewCanvas() {
   delete context_;
+}
+
+bool PreviewCanvas::Initialize() {
+  context_ = new wxGLContext(this);
+  if (context_ == nullptr) {
+    return false;
+  }
+
+  // To avoid flashing on MSW
+  SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+  return true;
 }
 
 void PreviewCanvas::OnResize(wxSizeEvent& event) {
@@ -134,6 +143,9 @@ class MainFrame : public wxFrame {
     int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
     PreviewCanvas *canvas = new PreviewCanvas(this, args);
     if (canvas == nullptr) {
+      return false;
+    }
+    if (!canvas->Initialize()) {
       return false;
     }
     return true;
