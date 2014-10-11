@@ -1,10 +1,7 @@
 /**
  * Copyright (C) 2014 The Motel on Jupiter
  */
-#include <wx/wxprec.h>
-#ifndef WX_PRECOMP
-#include <wx/wx.h>
-#endif
+#include "wrapper/wx_wrap.h"
 #include <wx/glcanvas.h>
 #include "auxiliary/csyntax_aux.h"
 #include "wrapper/glgraphics_wrap.h"
