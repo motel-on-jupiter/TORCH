@@ -4,6 +4,7 @@
 #include "auxiliary/csyntax_aux.h"
 #include "includer/gl_include.h"
 #include "includer/glm_include.h"
+#include "includer/spark_include.h"
 #include "includer/wx_include.h"
 #include "logging/emitter/DebuggerConsoleLogEmitter.h"
 #include "logging/Logger.h"
@@ -26,9 +27,12 @@ class PreviewCanvas : public wxGLCanvas {
  private:
   static const int kPreviewUpdateFrequency = 1000 / 30;
 
+  void CleanUp();
+
   wxGLContext *context_;
   wxTimer *timer_;
   uint64_t playing_time_;
+  SPK::Ref<SPK::System> particle_system_;
 };
 
 BEGIN_EVENT_TABLE(PreviewCanvas, wxGLCanvas)
@@ -42,7 +46,8 @@ PreviewCanvas::PreviewCanvas(wxFrame *parent, int *args)
                  wxFULL_REPAINT_ON_RESIZE),
       context_(nullptr),
       timer_(nullptr),
-      playing_time_(0) {
+      playing_time_(0),
+      particle_system_() {
 }
 
 PreviewCanvas::~PreviewCanvas() {
@@ -54,6 +59,7 @@ PreviewCanvas::~PreviewCanvas() {
 }
 
 bool PreviewCanvas::Initialize() {
+  // Create GL context
   context_ = new wxGLContext(this);
   if (context_ == nullptr) {
     LOGGER.Error("Failed to allocate for GL context object");
@@ -64,21 +70,46 @@ bool PreviewCanvas::Initialize() {
   timer_ = new wxTimer(this, 0);
   if (timer_ == nullptr) {
     LOGGER.Error("Failed to allocate for timer object");
-    delete context_;
-    context_ = nullptr;
+    CleanUp();
     return false;
   }
   if (!(timer_->Start(kPreviewUpdateFrequency))) {
     LOGGER.Error("Failed to start timer");
-    delete timer_;
-    delete context_;
-    timer_ = nullptr;
-    context_ = nullptr;
+    CleanUp();
     return false;
   }
 
   // To avoid flashing on MSW
   SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+
+  // Set up particle system
+  SPK::System::useConstantStep(1.0f / 30.0f);
+  particle_system_ = SPK::System::create(true);
+  if (!particle_system_) {
+    LOGGER.Error("Failed to create particle system");
+    CleanUp();
+    return false;
+  }
+  SPK::Ref<SPK::Group> group = particle_system_->createGroup(1);
+  if (!group) {
+    LOGGER.Error("Failed to create particle group");
+    CleanUp();
+    return false;
+  }
+  SPK::Ref<SPK::Emitter> emitter = SPK::NormalEmitter::create();
+  if (!emitter) {
+    LOGGER.Error("Failed to create particle emitter");
+    CleanUp();
+    return false;
+  }
+  group->addEmitter(emitter);
+  SPK::Ref<SPK::Renderer> renderer = SPK::GL::GLQuadRenderer::create();
+  if (!renderer) {
+    LOGGER.Error("Failed to create particle renderer");
+    CleanUp();
+    return false;
+  }
+  group->setRenderer(renderer);
   return true;
 }
 
@@ -106,7 +137,7 @@ void PreviewCanvas::OnPaint(wxPaintEvent& WXUNUSED(event)) {
                            static_cast<float>(GetSize().x / GetSize().y), 0.1f,
                            200.0f)));
   glMatrixMode(GL_MODELVIEW);
-  glLoadMatrixf(glm::value_ptr(glm::translate(glm::vec3(0.0f, -5.0f, 0.0f))));
+  glLoadMatrixf(glm::value_ptr(glm::translate(glm::vec3(0.0f, -0.0f, -5.0f))));
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glColor4f(0.2f, 0.2f, 0.5f, 1.0f);
@@ -121,6 +152,10 @@ void PreviewCanvas::OnPaint(wxPaintEvent& WXUNUSED(event)) {
   }
   glEnd();
 
+  if (particle_system_) {
+    particle_system_->renderParticles();
+  }
+
   glFlush();
   SwapBuffers();
 }
@@ -128,7 +163,23 @@ void PreviewCanvas::OnPaint(wxPaintEvent& WXUNUSED(event)) {
 void PreviewCanvas::OnTimer(wxTimerEvent &event) {
   if (event.GetTimer().GetId() == timer_->GetId()) {
     playing_time_ += timer_->GetInterval();
+    if (particle_system_) {
+      particle_system_->updateParticles(
+          static_cast<float>(timer_->GetInterval()) * 0.001f);
+    }
+    Refresh();
   }
+}
+
+void PreviewCanvas::CleanUp() {
+  particle_system_ = SPK_NULL_REF;
+  if (timer_ != nullptr) {
+    timer_->Stop();
+    delete timer_;
+    timer_ = nullptr;
+  }
+  delete context_;
+  context_ = nullptr;
 }
 
 class MainFrame : public wxFrame {
@@ -201,6 +252,7 @@ class MainFrame : public wxFrame {
   void OnExit(wxCommandEvent& WXUNUSED(event)) {
     Close(true);
   }
+
   void OnAbout(wxCommandEvent& WXUNUSED(event)) {
     wxAboutDialogInfo info;
     info.SetName(_("TORCH v0.0.1"));
