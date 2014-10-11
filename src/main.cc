@@ -102,15 +102,24 @@ class TORCHFrame : public wxFrame {
  public:
   TORCHFrame::TORCHFrame(const wxString &title, const wxPoint &pos,
                          const wxSize &size)
-      : wxFrame(NULL, wxID_ANY, title, pos, size) {
+      : wxFrame(NULL, wxID_ANY, title, pos, size),
+        preview_canvas_(nullptr) {
+    // Set up menu bar
     wxMenu *file_menu = new wxMenu;
     file_menu->Append(wxID_EXIT);
     wxMenuBar *menu_bar = new wxMenuBar;
     menu_bar->Append(file_menu, "&File");
     SetMenuBar(menu_bar);
+
+    // Set up status bar
     CreateStatusBar();
+
+    // Set up preview canvas
+    int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
+    preview_canvas_ = new PreviewCanvas(this, args);
   }
   virtual ~TORCHFrame() {
+    delete preview_canvas_;
   }
 
  private:
@@ -120,6 +129,8 @@ class TORCHFrame : public wxFrame {
   }
 
   wxDECLARE_EVENT_TABLE();
+
+  PreviewCanvas *preview_canvas_;
 };
 
 wxBEGIN_EVENT_TABLE(TORCHFrame, wxFrame)
@@ -131,12 +142,6 @@ class TORCHApp : public wxApp {
   virtual bool OnInit() {
     TORCHFrame *frame = new TORCHFrame("TORCH v0.0.1", wxPoint(50, 50),
                                        wxSize(900, 680));
-    int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
-    PreviewCanvas *preview_canvas = new PreviewCanvas(frame, args);
-    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    sizer->Add(preview_canvas, 1, wxEXPAND);
-    frame->SetSizer(sizer);
-    frame->SetAutoLayout(true);
     frame->Show(true);
     return true;
   }
