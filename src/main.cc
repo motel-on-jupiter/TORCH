@@ -9,7 +9,7 @@
 #include "logging/emitter/DebuggerConsoleLogEmitter.h"
 #include "logging/Logger.h"
 
-namespace TOUCH {
+namespace TORCH {
 
 class PreviewCanvas : public wxGLCanvas {
  public:
