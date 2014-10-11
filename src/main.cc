@@ -100,8 +100,7 @@ class MainFrame : public wxFrame {
  public:
   MainFrame::MainFrame(const wxString &title, const wxPoint &pos,
                          const wxSize &size)
-      : wxFrame(NULL, wxID_ANY, title, pos, size),
-        preview_canvas_(nullptr) {
+      : wxFrame(NULL, wxID_ANY, title, pos, size) {
     // Set up menu bar
     wxMenu *file_menu = new wxMenu;
     file_menu->Append(wxID_EXIT);
@@ -114,10 +113,9 @@ class MainFrame : public wxFrame {
 
     // Set up preview canvas
     int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
-    preview_canvas_ = new PreviewCanvas(this, args);
+    new PreviewCanvas(this, args);
   }
   virtual ~MainFrame() {
-    delete preview_canvas_;
   }
 
  private:
@@ -127,8 +125,6 @@ class MainFrame : public wxFrame {
   }
 
   wxDECLARE_EVENT_TABLE();
-
-  PreviewCanvas *preview_canvas_;
 };
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
@@ -138,8 +134,13 @@ wxEND_EVENT_TABLE()
 class App : public wxApp {
  public:
   virtual bool OnInit() {
+#if defined(_MSC_VER) && defined(_DEBUG)
+    // Validate the detection for memory leak
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+
     MainFrame *frame = new MainFrame("TORCH v0.0.1", wxPoint(50, 50),
-                                       wxSize(900, 680));
+                                     wxSize(900, 680));
     frame->Show(true);
     return true;
   }
