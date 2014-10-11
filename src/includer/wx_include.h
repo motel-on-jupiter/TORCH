@@ -12,6 +12,8 @@
 #include <wx/wx.h>
 #endif
 
+#include <wx/glcanvas.h>
+
 #pragma warning(pop)
 
 #endif /* INCLUDER_WXINCLUDE_H_ */
