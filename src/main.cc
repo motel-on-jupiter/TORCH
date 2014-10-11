@@ -53,14 +53,11 @@ bool PreviewCanvas::Initialize() {
   return true;
 }
 
-void PreviewCanvas::OnResize(wxSizeEvent& event) {
-  UNUSED(event);
+void PreviewCanvas::OnResize(wxSizeEvent& WXUNUSED(event)) {
   Refresh();
 }
 
-void PreviewCanvas::OnPaint(wxPaintEvent& event) {
-  UNUSED(event);
-
+void PreviewCanvas::OnPaint(wxPaintEvent& WXUNUSED(event)) {
   if (!IsShown()) {
     return;
   }
@@ -166,8 +163,7 @@ class MainFrame : public wxFrame {
   }
 
  private:
-  void OnExit(wxCommandEvent &event) {
-    UNUSED(event);
+  void OnExit(wxCommandEvent& WXUNUSED(event)) {
     Close(true);
   }
   void OnAbout(wxCommandEvent& WXUNUSED(event)) {
