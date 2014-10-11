@@ -14,6 +14,7 @@
 
 #include <wx/aboutdlg.h>
 #include <wx/glcanvas.h>
+#include <wx/timer.h>
 
 #pragma warning(pop)
 

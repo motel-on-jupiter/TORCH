@@ -17,27 +17,39 @@ class PreviewCanvas : public wxGLCanvas {
 
   bool Initialize();
 
-  void OnResize(wxSizeEvent &evt);
-  void OnPaint(wxPaintEvent &evt);
+  void OnResize(wxSizeEvent &event);
+  void OnPaint(wxPaintEvent &event);
+  void OnTimer(wxTimerEvent &event);
 
   DECLARE_EVENT_TABLE()
 
  private:
+  static const int kPreviewUpdateFrequency = 1000 / 30;
+
   wxGLContext *context_;
+  wxTimer *timer_;
+  uint64_t playing_time_;
 };
 
 BEGIN_EVENT_TABLE(PreviewCanvas, wxGLCanvas)
   EVT_SIZE(PreviewCanvas::OnResize)
   EVT_PAINT(PreviewCanvas::OnPaint)
+  EVT_TIMER(0, PreviewCanvas::OnTimer)
 END_EVENT_TABLE()
 
 PreviewCanvas::PreviewCanvas(wxFrame *parent, int *args)
     : wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize,
                  wxFULL_REPAINT_ON_RESIZE),
-      context_(nullptr) {
+      context_(nullptr),
+      timer_(nullptr),
+      playing_time_(0) {
 }
 
 PreviewCanvas::~PreviewCanvas() {
+  if (timer_ != nullptr) {
+    timer_->Stop();
+    delete timer_;
+  }
   delete context_;
 }
 
@@ -45,6 +57,23 @@ bool PreviewCanvas::Initialize() {
   context_ = new wxGLContext(this);
   if (context_ == nullptr) {
     LOGGER.Error("Failed to allocate for GL context object");
+    return false;
+  }
+
+  // Set up timer
+  timer_ = new wxTimer(this, 0);
+  if (timer_ == nullptr) {
+    LOGGER.Error("Failed to allocate for timer object");
+    delete context_;
+    context_ = nullptr;
+    return false;
+  }
+  if (!(timer_->Start(kPreviewUpdateFrequency))) {
+    LOGGER.Error("Failed to start timer");
+    delete timer_;
+    delete context_;
+    timer_ = nullptr;
+    context_ = nullptr;
     return false;
   }
 
@@ -94,6 +123,12 @@ void PreviewCanvas::OnPaint(wxPaintEvent& WXUNUSED(event)) {
 
   glFlush();
   SwapBuffers();
+}
+
+void PreviewCanvas::OnTimer(wxTimerEvent &event) {
+  if (event.GetTimer().GetId() == timer_->GetId()) {
+    playing_time_ += timer_->GetInterval();
+  }
 }
 
 class MainFrame : public wxFrame {
