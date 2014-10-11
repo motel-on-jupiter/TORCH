@@ -9,6 +9,8 @@
 #include "auxiliary/csyntax_aux.h"
 #include "wrapper/glgraphics_wrap.h"
 
+namespace TOUCH {
+
 class PreviewCanvas : public wxGLCanvas {
  public:
   PreviewCanvas(wxFrame *parent, int *args);
@@ -98,9 +100,9 @@ void PreviewCanvas::OnPaint(wxPaintEvent& event) {
   SwapBuffers();
 }
 
-class TORCHFrame : public wxFrame {
+class MainFrame : public wxFrame {
  public:
-  TORCHFrame::TORCHFrame(const wxString &title, const wxPoint &pos,
+  MainFrame::MainFrame(const wxString &title, const wxPoint &pos,
                          const wxSize &size)
       : wxFrame(NULL, wxID_ANY, title, pos, size),
         preview_canvas_(nullptr) {
@@ -118,7 +120,7 @@ class TORCHFrame : public wxFrame {
     int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
     preview_canvas_ = new PreviewCanvas(this, args);
   }
-  virtual ~TORCHFrame() {
+  virtual ~MainFrame() {
     delete preview_canvas_;
   }
 
@@ -133,19 +135,20 @@ class TORCHFrame : public wxFrame {
   PreviewCanvas *preview_canvas_;
 };
 
-wxBEGIN_EVENT_TABLE(TORCHFrame, wxFrame)
-  EVT_MENU(wxID_EXIT, TORCHFrame::OnExit)
+wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
+  EVT_MENU(wxID_EXIT, MainFrame::OnExit)
 wxEND_EVENT_TABLE()
 
-class TORCHApp : public wxApp {
+class App : public wxApp {
  public:
   virtual bool OnInit() {
-    TORCHFrame *frame = new TORCHFrame("TORCH v0.0.1", wxPoint(50, 50),
+    MainFrame *frame = new MainFrame("TORCH v0.0.1", wxPoint(50, 50),
                                        wxSize(900, 680));
     frame->Show(true);
     return true;
   }
 };
 
-wxIMPLEMENT_APP(TORCHApp);
+wxIMPLEMENT_APP(App);
 
+}
