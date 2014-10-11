@@ -1,10 +1,10 @@
 /**
  * Copyright (C) 2014 The Motel on Jupiter
  */
-#include "wrapper/wx_wrap.h"
+#include "includer/wx_include.h"
 #include <wx/glcanvas.h>
 #include "auxiliary/csyntax_aux.h"
-#include "wrapper/glgraphics_wrap.h"
+#include "includer/gl_include.h"
 
 namespace TOUCH {
 

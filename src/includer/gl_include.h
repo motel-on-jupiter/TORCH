@@ -1,8 +1,8 @@
 /**
  * Copyright (C) 2014 The Motel on Jupiter
  */
-#ifndef GLGRAPHICSWRAP_H_
-#define GLGRAPHICSWRAP_H_
+#ifndef INCLUDER_GLINCLUDE_H_
+#define INCLUDER_GLINCLUDE_H_
 
 #include <GL/freeglut.h>
 
@@ -19,4 +19,4 @@ class _dummy {
 };
 }
 
-#endif /* GLGRAPHICSWRAP_H_ */
+#endif /* INCLUDER_GLINCLUDE_H_ */
