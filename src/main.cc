@@ -134,7 +134,7 @@ class MainFrame : public wxFrame {
     // Set up status bar
     wxStatusBar *status_bar = CreateStatusBar();
     if (status_bar == nullptr) {
-      LOGGER.Error("Failed to craete status bar");
+      LOGGER.Error("Failed to create status bar");
       return false;
     }
 
