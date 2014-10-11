@@ -4,6 +4,8 @@
 #include "auxiliary/csyntax_aux.h"
 #include "includer/gl_include.h"
 #include "includer/wx_include.h"
+#include "logging/emitter/DebuggerConsoleLogEmitter.h"
+#include "logging/Logger.h"
 
 namespace TOUCH {
 
@@ -48,6 +50,7 @@ PreviewCanvas::~PreviewCanvas() {
 bool PreviewCanvas::Initialize() {
   context_ = new wxGLContext(this);
   if (context_ == nullptr) {
+    LOGGER.Error("Failed to allocate for GL context object");
     return false;
   }
 
@@ -118,17 +121,21 @@ class MainFrame : public wxFrame {
     // Set up menu bar
     wxMenu *file_menu = new wxMenu;
     if (file_menu == nullptr) {
+      LOGGER.Error("Failed to allocate for file menu object");
       return false;
     }
     wxMenuItem *menu_item = file_menu->Append(wxID_EXIT);
     if (menu_item == nullptr) {
+      LOGGER.Error("Failed to append exit item to file menu");
       return false;
     }
     wxMenuBar *menu_bar = new wxMenuBar;
     if (menu_bar == nullptr) {
+      LOGGER.Error("Failed to allocate for menu bar object");
       return false;
     }
     if (!menu_bar->Append(file_menu, "&File")) {
+      LOGGER.Error("Failed to append file menu to menu bar");
       return false;
     }
     SetMenuBar(menu_bar);
@@ -136,6 +143,7 @@ class MainFrame : public wxFrame {
     // Set up status bar
     wxStatusBar *status_bar = CreateStatusBar();
     if (status_bar == nullptr) {
+      LOGGER.Error("Failed to craete status bar");
       return false;
     }
 
@@ -143,6 +151,7 @@ class MainFrame : public wxFrame {
     int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
     PreviewCanvas *canvas = new PreviewCanvas(this, args);
     if (canvas == nullptr) {
+      LOGGER.Error("Failed to allocate for preview canvas object");
       return false;
     }
     if (!canvas->Initialize()) {
@@ -172,18 +181,33 @@ class App : public wxApp {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
+    // Set up logger
+    LOGGER.PushEmitter(DEBUGGER_CONSOLE_LOG_EMITTER);
+    LOGGER.Info("Initialize application");
+
+    // Set up window
     MainFrame *frame = new MainFrame("TORCH v0.0.1", wxPoint(50, 50),
                                      wxSize(900, 680));
     if (frame == nullptr) {
+      LOGGER.Error("Failed to allocate for frame object");
       return false;
     }
     if (!frame->Initialize()) {
       return false;
     }
+
+    // Show window
+    LOGGER.Info("Show window");
     if (!frame->Show(true)) {
+      LOGGER.Error("Failed to show frame");
       return false;
     }
     return true;
+  }
+
+  virtual int OnExit() {
+    LOGGER.Info("Finalize application");
+    return 0;
   }
 };
 
