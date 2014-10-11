@@ -119,7 +119,7 @@ class MainFrame : public wxFrame {
     if (menu_bar == nullptr) {
       return false;
     }
-    if (!menu_bar->Append(file_menu, "&pFile")) {
+    if (!menu_bar->Append(file_menu, "&File")) {
       return false;
     }
     SetMenuBar(menu_bar);
