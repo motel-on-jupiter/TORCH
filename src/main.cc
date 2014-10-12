@@ -283,7 +283,7 @@ class App : public wxApp {
     LOGGER.Info("Initialize application");
 
     // Set up window
-    MainFrame *frame = new MainFrame("TORCH v0.0.1", wxPoint(50, 50),
+    MainFrame *frame = new MainFrame("TORCH v0.0.2", wxPoint(50, 50),
                                      wxSize(900, 680));
     if (frame == nullptr) {
       LOGGER.Error("Failed to allocate for frame object");
