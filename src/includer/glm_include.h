@@ -5,8 +5,6 @@
 #define INCLUDER_GLMINCLUDE_H_
 
 #define GLM_FORCE_RADIANS
-#define GLM_GTX_simd_vec4
-#define GLM_GTX_simd_mat4
 
 #include <glm/glm.hpp>
 
@@ -48,7 +46,6 @@
 #include <glm/gtx/gradient_paint.hpp>
 #include <glm/gtx/handed_coordinate_space.hpp>
 #include <glm/gtx/inertia.hpp>
-#include <glm/gtx/int_10_10_10_2.hpp>
 #include <glm/gtx/integer.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtx/io.hpp>
@@ -70,9 +67,7 @@
 #include <glm/gtx/polar_coordinates.hpp>
 #include <glm/gtx/projection.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include <glm/gtx/random.hpp>
 #include <glm/gtx/raw_data.hpp>
-#include <glm/gtx/reciprocal.hpp>
 #include <glm/gtx/rotate_normalized_axis.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/scalar_relational.hpp>
@@ -86,8 +81,6 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtx/transform2.hpp>
-#include <glm/gtx/ulp.hpp>
-#include <glm/gtx/unsigned_int.hpp>
 #include <glm/gtx/vec1.hpp>
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/vector_query.hpp>
@@ -96,7 +89,12 @@
 // deprecated:
 // - glm/gtx/constants.hpp
 // - glm/gtx/epsilon.hpp
+// - glm/gtx/int_10_10_10_2.hpp
 // - glm/gtx/noise.hpp
+// - glm/gtx/random.hpp
+// - glm/gtx/reciprocal.hpp
+// - glm/gtx/ulp.hpp
+// - glm/gtx/unsigned_int.hpp
 //
 // compile error:
 // - glm/gtx/simd_quat.hpp
