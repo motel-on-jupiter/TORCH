@@ -183,9 +183,13 @@ class MainFrame : public wxFrame {
  public:
   MainFrame::MainFrame(const wxString &title, const wxPoint &pos,
                        const wxSize &size)
-      : wxFrame(NULL, wxID_ANY, title, pos, size) {
+      : wxFrame(nullptr, wxID_ANY, title, pos, size,
+                wxDEFAULT_FRAME_STYLE |wxSUNKEN_BORDER),
+        aui_manager_() {
+    aui_manager_.SetManagedWindow(this);
   }
   virtual ~MainFrame() {
+    aui_manager_.UnInit();
   }
 
   bool Initialize() {
@@ -242,6 +246,18 @@ class MainFrame : public wxFrame {
     if (!canvas->Initialize()) {
       return false;
     }
+
+    // Set up preview pain
+    wxAuiPaneInfo info;
+    info.DefaultPane();
+    info.Name(wxT("preview"));
+    info.Caption(wxT("Preview"));
+    info.PaneBorder(true);
+    info.MaximizeButton(true);
+    info.MinimizeButton(true);
+    info.PinButton(true);
+    aui_manager_.AddPane(canvas, info);
+    aui_manager_.Update();
     return true;
   }
 
@@ -258,6 +274,8 @@ class MainFrame : public wxFrame {
     info.AddDeveloper(wxT("Bobo Zeta"));
     wxAboutBox(info);
   }
+
+  wxAuiManager aui_manager_;
 
   wxDECLARE_EVENT_TABLE();
 };

@@ -13,6 +13,7 @@
 #endif
 
 #include <wx/aboutdlg.h>
+#include <wx/aui/aui.h>
 #include <wx/glcanvas.h>
 #include <wx/timer.h>
 
