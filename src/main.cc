@@ -255,7 +255,7 @@ class MainFrame : public wxFrame {
 
   void OnAbout(wxCommandEvent& WXUNUSED(event)) {
     wxAboutDialogInfo info;
-    info.SetName(_("TORCH v0.0.1"));
+    info.SetName(_("TORCH v0.0.2"));
     info.SetDescription(_("A particle designer for SPARK engine"));
     info.SetCopyright(wxT("Copyright (C) 2014 The Motel on Jupiter"));
     info.AddDeveloper(wxT("Bobo Zeta"));
