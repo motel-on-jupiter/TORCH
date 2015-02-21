@@ -11,6 +11,8 @@
 
 namespace TORCH {
 
+const char kAppName[] = "TORCH v0.0.3";
+
 class PreviewCanvas : public wxGLCanvas {
  public:
   PreviewCanvas(wxFrame *parent, int *args);
@@ -268,7 +270,7 @@ class MainFrame : public wxFrame {
 
   void OnAbout(wxCommandEvent& WXUNUSED(event)) {
     wxAboutDialogInfo info;
-    info.SetName(_("TORCH v0.0.2"));
+    info.SetName(_(kAppName));
     info.SetDescription(_("A particle designer for SPARK engine"));
     info.SetCopyright(wxT("Copyright (C) 2014 The Motel on Jupiter"));
     info.AddDeveloper(wxT("Bobo Zeta"));
@@ -298,7 +300,7 @@ class App : public wxApp {
     LOGGER.Info("Initialize application");
 
     // Set up window
-    MainFrame *frame = new MainFrame("TORCH v0.0.2", wxPoint(50, 50),
+    MainFrame *frame = new MainFrame(kAppName, wxPoint(50, 50),
                                      wxSize(900, 680));
     if (frame == nullptr) {
       LOGGER.Error("Failed to allocate for frame object");
