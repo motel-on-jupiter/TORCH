@@ -131,13 +131,10 @@ void PreviewCanvas::OnPaint(wxPaintEvent& WXUNUSED(event)) {
   glViewport(0, 0, GetSize().x, GetSize().y);
 
   glMatrixMode(GL_PROJECTION);
-  glLoadMatrixf(
-      glm::value_ptr(
-          glm::perspective(glm::radians(45.0f),
-                           static_cast<float>(GetSize().x / GetSize().y), 0.1f,
-                           200.0f)));
+  float aspect = static_cast<float>(GetSize().x) / static_cast<float>(GetSize().y);
+  glLoadMatrixf(glm::value_ptr(glm::perspective(glm::radians(45.0f), aspect, 0.1f, 200.0f)));
   glMatrixMode(GL_MODELVIEW);
-  glLoadMatrixf(glm::value_ptr(glm::translate(glm::vec3(0.0f, -0.0f, -5.0f))));
+  glLoadMatrixf(glm::value_ptr(glm::translate(glm::vec3(0.0f, 0.0f, -5.0f))));
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glColor4f(0.2f, 0.2f, 0.5f, 1.0f);
