@@ -26,3 +26,8 @@
 *.exe
 *.out
 *.app
+
+# Eqlipse files
+.cproject
+.project
+Debug
