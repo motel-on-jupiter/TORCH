@@ -11,7 +11,7 @@
 
 namespace TORCH {
 
-const char kAppName[] = "TORCH v0.0.3";
+const char kAppName[] = "TORCH v0.1.0";
 
 class PreviewCanvas : public wxGLCanvas {
  public:
