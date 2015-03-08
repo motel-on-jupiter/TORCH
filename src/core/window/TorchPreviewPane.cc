@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2015 The Motel on Jupiter
  */
-#include "core/window/TorchPreviewPain.h"
+#include "core/window/TorchPreviewPane.h"
 #include "includer/gl_include.h"
 #include "includer/glm_include.h"
 #include "includer/spark_include.h"

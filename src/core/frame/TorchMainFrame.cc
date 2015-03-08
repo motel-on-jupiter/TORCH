@@ -5,7 +5,7 @@
 #include "includer/wx_include.h"
 #include "logging/Logger.h"
 #include "core/TorchApp.h"
-#include "core/window/TorchPreviewPain.h"
+#include "core/window/TorchPreviewPane.h"
 
 TorchMainFrame::TorchMainFrame(const wxString &title, const wxPoint &pos,
                                const wxSize &size)

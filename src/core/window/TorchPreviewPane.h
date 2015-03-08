@@ -1,8 +1,8 @@
 /**
  * Copyright (C) 2015 The Motel on Jupiter
  */
-#ifndef CORE_WINDOW_TORCHPREVIEWPAIN_H_
-#define CORE_WINDOW_TORCHPREVIEWPAIN_H_
+#ifndef CORE_WINDOW_TORCHPREVIEWPANE_H_
+#define CORE_WINDOW_TORCHPREVIEWPANE_H_
 
 #include "includer/spark_include.h"
 #include "includer/wx_include.h"
@@ -34,4 +34,4 @@ class TorchPreviewCanvas : public wxGLCanvas {
   SPK::Ref<SPK::System> particle_;
 };
 
-#endif /* CORE_WINDOW_TORCHPREVIEWPAIN_H_ */
+#endif /* CORE_WINDOW_TORCHPREVIEWPANE_H_ */
