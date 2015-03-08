@@ -7,6 +7,7 @@
 #include "includer/spark_include.h"
 #include "includer/wx_include.h"
 #include "logging/Logger.h"
+#include "particle/loader/TorchSampleParticleLoader.h"
 
 class TorchPreviewCanvas : public wxGLCanvas {
  public:
@@ -29,7 +30,8 @@ class TorchPreviewCanvas : public wxGLCanvas {
   wxGLContext *context_;
   wxTimer *timer_;
   uint64_t playing_time_;
-  SPK::Ref<SPK::System> particle_system_;
+  TorchSampleParticleLoader particle_loader_;
+  SPK::Ref<SPK::System> particle_;
 };
 
 #endif /* CORE_WINDOW_TORCHPREVIEWPAIN_H_ */

@@ -7,6 +7,7 @@
 #include "includer/spark_include.h"
 #include "includer/wx_include.h"
 #include "logging/Logger.h"
+#include "particle/loader/TorchSampleParticleLoader.h"
 
 TorchPreviewCanvas::TorchPreviewCanvas(wxFrame *parent, int *args)
     : wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize,
@@ -14,7 +15,8 @@ TorchPreviewCanvas::TorchPreviewCanvas(wxFrame *parent, int *args)
       context_(nullptr),
       timer_(nullptr),
       playing_time_(0),
-      particle_system_() {
+      particle_loader_(),
+      particle_() {
 }
 
 TorchPreviewCanvas::~TorchPreviewCanvas() {
@@ -50,33 +52,17 @@ bool TorchPreviewCanvas::Initialize() {
   SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
   // Set up particle system
-  SPK::System::useConstantStep(1.0f / 30.0f);
-  particle_system_ = SPK::System::create(true);
-  if (!particle_system_) {
+  particle_ = SPK::System::create(true);
+  if (!particle_) {
     LOGGER.Error("Failed to create particle system");
     CleanUp();
     return false;
   }
-  SPK::Ref<SPK::Group> group = particle_system_->createGroup(1);
-  if (!group) {
-    LOGGER.Error("Failed to create particle group");
+  SPK::System::useConstantStep(1.0f / 30.0f);
+  if (!particle_loader_.Load(particle_)) {
     CleanUp();
     return false;
   }
-  SPK::Ref<SPK::Emitter> emitter = SPK::NormalEmitter::create();
-  if (!emitter) {
-    LOGGER.Error("Failed to create particle emitter");
-    CleanUp();
-    return false;
-  }
-  group->addEmitter(emitter);
-  SPK::Ref<SPK::Renderer> renderer = SPK::GL::GLQuadRenderer::create();
-  if (!renderer) {
-    LOGGER.Error("Failed to create particle renderer");
-    CleanUp();
-    return false;
-  }
-  group->setRenderer(renderer);
   return true;
 }
 
@@ -116,8 +102,8 @@ void TorchPreviewCanvas::OnPaint(wxPaintEvent& WXUNUSED(event)) {
   }
   glEnd();
 
-  if (particle_system_) {
-    particle_system_->renderParticles();
+  if (particle_) {
+    particle_->renderParticles();
   }
 
   glFlush();
@@ -127,8 +113,8 @@ void TorchPreviewCanvas::OnPaint(wxPaintEvent& WXUNUSED(event)) {
 void TorchPreviewCanvas::OnTimer(wxTimerEvent &event) {
   if (event.GetTimer().GetId() == timer_->GetId()) {
     playing_time_ += timer_->GetInterval();
-    if (particle_system_) {
-      particle_system_->updateParticles(
+    if (particle_) {
+      particle_->updateParticles(
           static_cast<float>(timer_->GetInterval()) * 0.001f);
     }
     Refresh();
@@ -142,7 +128,7 @@ BEGIN_EVENT_TABLE(TorchPreviewCanvas, wxGLCanvas)
 END_EVENT_TABLE()
 
 void TorchPreviewCanvas::CleanUp() {
-  particle_system_ = SPK_NULL_REF;
+  particle_ = SPK_NULL_REF;
   if (timer_ != nullptr) {
     timer_->Stop();
     delete timer_;
