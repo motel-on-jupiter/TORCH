@@ -2,12 +2,13 @@
  * Copyright (C) 2014 The Motel on Jupiter
  */
 #include "core/TorchApp.h"
+#include <string>
 #include "core/frame/TorchMainFrame.h"
 #include "includer/wx_include.h"
 #include "logging/emitter/DebuggerConsoleLogEmitter.h"
 #include "logging/Logger.h"
 
-const char TorchApp::kName[] = "TORCH v0.1.0";
+const std::string TorchApp::kName("TORCH v0.2.0");
 
 bool TorchApp::OnInit() {
 #if defined(_MSC_VER) && defined(_DEBUG)

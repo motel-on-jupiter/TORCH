@@ -4,11 +4,12 @@
 #ifndef CORE_TORCHAPP_H_
 #define CORE_TORCHAPP_H_
 
+#include <string>
 #include "includer/wx_include.h"
 
 class TorchApp : public wxApp {
  public:
-  static const char kName[];
+  static const std::string kName;
 
   virtual bool OnInit();
   virtual int OnExit();
