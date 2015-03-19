@@ -6,6 +6,8 @@
 
 #include "includer/wx_include.h"
 
+class TorchPreviewCanvas;
+
 class TorchMainFrame : public wxFrame {
  public:
   TorchMainFrame::TorchMainFrame(const wxString &title, const wxPoint &pos,
@@ -15,9 +17,16 @@ class TorchMainFrame : public wxFrame {
   bool Initialize();
 
  private:
+  enum {
+    wxID_IMPORT = 2,
+  };
+
+  void OnImport(wxCommandEvent& WXUNUSED(event));
   void OnExit(wxCommandEvent& WXUNUSED(event));
   void OnAbout(wxCommandEvent& WXUNUSED(event));
+
   wxAuiManager aui_manager_;
+  TorchPreviewCanvas *canvas_;
 
   wxDECLARE_EVENT_TABLE();
 };

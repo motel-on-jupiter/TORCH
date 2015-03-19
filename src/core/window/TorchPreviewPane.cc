@@ -8,6 +8,8 @@
 #include "includer/wx_include.h"
 #include "logging/Logger.h"
 #include "particle/loader/TorchSampleParticleLoader.h"
+#include "particle/loader/FileParticleLoader.h"
+#include <vector>
 
 TorchPreviewCanvas::TorchPreviewCanvas(wxFrame *parent, int *args)
     : wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize,

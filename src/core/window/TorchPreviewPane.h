@@ -20,6 +20,10 @@ class TorchPreviewCanvas : public wxGLCanvas {
   void OnPaint(wxPaintEvent &event);
   void OnTimer(wxTimerEvent &event);
 
+  SPK::Ref<SPK::System> &particle() {
+    return particle_;
+  }
+
   DECLARE_EVENT_TABLE()
 
  private:
