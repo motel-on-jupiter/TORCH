@@ -7,8 +7,8 @@
 #include "logging/Logger.h"
 #include "particle/loader/ParticleLoader.h"
 
-bool TorchSampleParticleLoader::Load(SPK::Ref<SPK::System> spk_system) {
-  SPK::Ref<SPK::Group> group = spk_system->createGroup(1);
+bool TorchSampleParticleLoader::Load(SPK::Ref<SPK::System> &system) {
+  SPK::Ref<SPK::Group> group = system->createGroup(1);
   if (!group) {
     LOGGER.Error("Failed to create particle group");
     return false;

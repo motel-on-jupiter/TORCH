@@ -12,7 +12,7 @@ class TorchSampleParticleLoader : public ParticleLoader {
   TorchSampleParticleLoader() : ParticleLoader() {}
   virtual ~TorchSampleParticleLoader() {}
 
-  virtual bool Load(SPK::Ref<SPK::System> spk_system);
+  virtual bool Load(SPK::Ref<SPK::System> &system);
 };
 
 #endif /* PARTICLE_LOADER_TORCHSAMPLEPARTICLELOADER_H_ */

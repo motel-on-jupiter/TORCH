@@ -11,7 +11,7 @@ class ParticleLoader {
   ParticleLoader() {}
   virtual ~ParticleLoader() {}
 
-  virtual bool Load(SPK::Ref<SPK::System> spk_system) = 0;
+  virtual bool Load(SPK::Ref<SPK::System> &spk_system) = 0;
 };
 
 #endif /* PARTICLE_LOADER_PARTICLELOADER_H_ */
